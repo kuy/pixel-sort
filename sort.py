@@ -12,6 +12,7 @@ def takeComp(i):
     return take
 
 for c in range(3):
+    takeFunc = takeComp(c)
     gen = Image.new(orig.mode, orig.size)
 
     xmax, ymax = orig.size
@@ -21,7 +22,7 @@ for c in range(3):
             pixel = orig.getpixel((x, y))
             buf.append(pixel)
         
-        buf.sort(key=takeComp(c), reverse=True)
+        buf.sort(key=takeFunc, reverse=True)
 
         for y in range(ymax):
             gen.putpixel((x, y), buf[y])
