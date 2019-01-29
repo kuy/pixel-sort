@@ -4,6 +4,7 @@
 from PIL import Image
 
 orig = Image.open("image.jpg")
+origdata = list(orig.getdata())
 orig.show()
 
 def takeComp(i):
@@ -13,18 +14,15 @@ def takeComp(i):
 
 for c in range(3):
     takeFunc = takeComp(c)
-    gen = Image.new(orig.mode, orig.size)
-
+    
+    buf = []
     xmax, ymax = orig.size
-    for x in range(xmax):
-        buf = []
-        for y in range(ymax):
-            pixel = orig.getpixel((x, y))
-            buf.append(pixel)
-        
-        buf.sort(key=takeFunc, reverse=True)
+    for row in range(ymax):
+        base = row * xmax
+        line = origdata[base:base+xmax]
+        line.sort(key=takeFunc, reverse=True)
+        buf += line
 
-        for y in range(ymax):
-            gen.putpixel((x, y), buf[y])
-
+    gen = Image.new(orig.mode, orig.size)
+    gen.putdata(buf)
     gen.show()
